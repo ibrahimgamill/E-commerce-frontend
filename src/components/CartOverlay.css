@@ -1,0 +1,103 @@
+.cart-overlay-bg {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(34,34,34,0.33);
+    z-index: 1000;
+}
+
+.cart-overlay {
+    position: fixed;
+    top: 0; right: 0; height: 100vh; width: 410px;
+    background: #fff;
+    box-shadow: -4px 0 24px #0000001c;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    min-width: 320px;
+    transition: transform 0.25s cubic-bezier(.4,0,.2,1);
+}
+
+.cart-overlay-header {
+    display: flex;
+    align-items: center;
+    padding: 24px 26px 10px 26px;
+    border-bottom: 1px solid #e8e8e8;
+    font-size: 19px;
+    background: #fff;
+    min-height: 44px;
+}
+
+.cart-overlay-close {
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    color: #888;
+    font-size: 27px;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+}
+
+.cart-overlay-content {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 14px 24px 14px 24px;
+}
+
+.cart-overlay-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 18px 0 14px 0;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.cart-overlay-img {
+    width: 78px; height: 78px;
+    object-fit: contain;
+    border-radius: 10px;
+    background: #fafafa;
+}
+
+.cart-overlay-qty-btn {
+    width: 28px; height: 28px;
+    border: none;
+    border-radius: 6px;
+    background: #eee;
+    color: #222;
+    font-size: 19px;
+    font-weight: 700;
+    cursor: pointer;
+    outline: none;
+    transition: background 0.15s;
+}
+.cart-overlay-qty-btn:hover {
+    background: #27ae60;
+    color: #fff;
+}
+
+.cart-overlay-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 15px 26px;
+    border-top: 1px solid #eaeaea;
+    font-size: 17px;
+}
+
+.cart-overlay-order-btn {
+    margin: 18px 26px 28px 26px;
+    background: #27ae60;
+    color: #fff;
+    border: none;
+    border-radius: 11px;
+    padding: 12px 0;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    width: calc(100% - 52px);
+    transition: background 0.14s;
+}
+.cart-overlay-order-btn:active {
+    background: #219150;
+}
