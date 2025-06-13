@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import kebabCase from "../utils/kebabCase";
 
 export default function ProductCard({ product, onQuickShop }) {
     return (
@@ -9,11 +10,19 @@ export default function ProductCard({ product, onQuickShop }) {
             <div
                 className={`product-card${!product.inStock ? " out-of-stock" : ""}`}
                 style={{ position: "relative" }}
+                data-testid={`product-${kebabCase(product.name)}`}
             >
                 <img
                     src={product.gallery[0]}
                     alt={product.name}
-                    style={{ width: "100%", height: 140, objectFit: "cover", borderRadius: 6 }}
+                    style={{
+                        width: "100%",
+                        height: 210,
+                        objectFit: "cover",
+                        borderRadius: 6,
+                        border: "1px solid #e5e5e5",
+                        background: "#fafafa"
+                    }}
                 />
                 {!product.inStock && (
                     <div className="out-of-stock-banner">
@@ -25,12 +34,11 @@ export default function ProductCard({ product, onQuickShop }) {
                     {product.prices[0]?.currency?.symbol} {product.prices[0]?.amount}
                 </div>
                 <div className="product-brand">{product.brand}</div>
-                {/* Quick Shop button: only show if in stock */}
                 {product.inStock && (
                     <button
                         className="quick-shop-btn"
                         onClick={e => {
-                            e.preventDefault();  // <-- Prevent Link navigation on button click
+                            e.preventDefault();
                             e.stopPropagation();
                             onQuickShop(product);
                         }}
