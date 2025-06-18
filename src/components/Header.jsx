@@ -1,47 +1,45 @@
-import { Link, useLocation } from "react-router-dom";
-import { useQuery } from "@apollo/client";
-import { GET_CATEGORIES } from "../graphql/queries";
-import { useCart } from "../context/CartContext";
+import { useState } from "react";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
-export default function Header({onCartClick}) {
-    const location = useLocation();
-    const activeCategory = location.pathname.split("/")[2] || "";
-    const { loading, error, data } = useQuery(GET_CATEGORIES);
+import Header from "./components/Header";
+import CartOverlay from "./components/CartOverlay";
+import ProductList from "./pages/ProductList";
+import ProductDetails from "./pages/ProductDetails";
+import NotFound from "./pages/NotFound";
 
-    // Filter out "all" category if present
-    let categories = [];
-    if (data && data.categories) {
-        categories = data.categories.filter(cat => cat.name !== "all");
-    }
+// Apollo Client configuration
+const client = new ApolloClient({
+    uri: import.meta.env.VITE_GRAPHQL_URL || "http://localhost:8080/graphql",
+    cache: new InMemoryCache(),
+});
 
-    // Cart context for count
-    const { cartItems = [] } = useCart();
-    const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+function App() {
+    const [isCartOpen, setIsCartOpen] = useState(false);
+
+    const toggleCart = () => setIsCartOpen(open => !open);
+    const closeCart  = () => setIsCartOpen(false);
 
     return (
-        <header>
-            <nav>
-                {loading && <span>Loading...</span>}
-                {!loading && !error && categories.map(cat => (
-                    <Link
-                        key={cat.name}
-                        to={`/category/${cat.name}`}
-                        className={`nav-link${activeCategory === cat.name ? " active" : ""}`}
-                        data-testid={activeCategory === cat.name ? "active-category-link" : "category-link"}
-                    >
-                        {cat.name[0].toUpperCase() + cat.name.slice(1)}
-                    </Link>
-                ))}
-            </nav>
-            <button className="cart-btn" data-testid="cart-btn" onClick={onCartClick}>
-                🛒
-                {totalItems > 0 && (
-                    <span className="cart-bubble">
-                        {totalItems}
-                    </span>
-                )}
-            </button>
-        </header>
+        <ApolloProvider client={client}>
+            <Router>
+                {/* pass your click-handler into Header */}
+                <Header onCartClick={toggleCart} />
 
+                {/* only render the overlay when open */}
+                {isCartOpen && <CartOverlay onClose={closeCart} />}
+
+                <main>
+                    <Routes>
+                        <Route path="/" element={<Navigate to="/category/all" />} />
+                        <Route path="/category/:categoryId" element={<ProductList />} />
+                        <Route path="/product/:productId" element={<ProductDetails />} />
+                        <Route path="*" element={<NotFound />} />
+                    </Routes>
+                </main>
+            </Router>
+        </ApolloProvider>
     );
 }
+
+export default App;

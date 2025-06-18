@@ -9,8 +9,13 @@ import NotFound from "./pages/NotFound";
 import RedirectToFirstCategory from "./pages/RedirectToFirstCategory.jsx";
 
 // Apollo Client configuration
-const client = new ApolloClient({
-    uri: "https://e-commerce-backend-2b8o.onrender.com/",
+
+const GRAPHQL_URL =
+    import.meta.env.VITE_GRAPHQL_URL ||
+    "http://localhost:8080/graphql";
+
+export const client = new ApolloClient({
+    uri: GRAPHQL_URL,
     cache: new InMemoryCache(),
 });
 
