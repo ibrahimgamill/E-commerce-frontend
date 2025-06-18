@@ -10,7 +10,7 @@ import RedirectToFirstCategory from "./pages/RedirectToFirstCategory.jsx";
 
 // Apollo Client configuration
 const client = new ApolloClient({
-    uri: "http://localhost:8080/graphql",
+    uri: "https://e-commerce-backend-2b8o.onrender.com/",
     cache: new InMemoryCache(),
 });
 
