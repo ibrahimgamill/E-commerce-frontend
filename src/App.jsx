@@ -10,12 +10,8 @@ import RedirectToFirstCategory from "./pages/RedirectToFirstCategory.jsx";
 
 // Apollo Client configuration
 
-const GRAPHQL_URL =
-    import.meta.env.VITE_GRAPHQL_URL ||
-    "http://localhost:8080/graphql";
-
-export const client = new ApolloClient({
-    uri: GRAPHQL_URL,
+const client = new ApolloClient({
+    uri: "https://e-commerce-backend-2b8o.onrender.com/",
     cache: new InMemoryCache(),
 });
 
