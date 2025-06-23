@@ -5,10 +5,12 @@ import ProductCard from "../components/ProductCard";
 import { useCart } from "../context/CartContext";
 export default function ProductList() {
     const { categoryId } = useParams();
-    const { loading, error, data } = useQuery(GET_PRODUCTS, {
-        variables: { category: categoryId }
-    });
+    const variables = {};
+    if (categoryId && categoryId !== "all") {
+        variables.category = categoryId;
+    }
 
+    const { loading, error, data } = useQuery(GET_PRODUCTS, { variables });
     const { addToCart } = useCart();
 
     const handleQuickShop = (product) => {
@@ -24,22 +26,20 @@ export default function ProductList() {
     };
 
     if (loading) return <div style={{ margin: 32 }}>Loading...</div>;
-    if (error) return <div style={{ color: "red", margin: 32 }}>Error loading products.</div>;
+    if (error) return <div style={{ margin: 32, color: "red" }}>Error loading products.</div>;
 
     return (
         <div>
-            <h2 style={{ margin: "32px 0 16px 0", fontSize: "2rem" }}>
+            <h2 style={{ margin: "32px 0 16px", fontSize: "2rem" }}>
                 {categoryId[0].toUpperCase() + categoryId.slice(1)} Products
             </h2>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
-                {(!data.products || data.products.length === 0) && <div>No products found.</div>}
-                {data.products.map(product => (
-                    <ProductCard
-                        key={product.id}
-                        product={product}
-                        onQuickShop={handleQuickShop}
-                    />
-                ))}
+                {(!data.products || !data.products.length)
+                    ? <div>No products found.</div>
+                    : data.products.map(p => (
+                        <ProductCard key={p.id} product={p} onQuickShop={handleQuickShop} />
+                    ))
+                }
             </div>
         </div>
     );

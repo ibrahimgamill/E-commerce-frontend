@@ -1,8 +1,6 @@
-// src/App.jsx
 import { useState } from "react";
-import { ApolloProvider } from "@apollo/client";
+import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import client from "./apolloClient.js";
 
 import Header from "./components/Header";
 import CartOverlay from "./components/CartOverlay";
@@ -11,7 +9,12 @@ import ProductDetails from "./pages/ProductDetails";
 import NotFound from "./pages/NotFound";
 import RedirectToFirstCategory from "./pages/RedirectToFirstCategory";
 
-function App() {
+const client = new ApolloClient({
+    uri: import.meta.env.VITE_GRAPHQL_URL,
+    cache: new InMemoryCache(),
+});
+
+export default function App() {
     const [cartOpen, setCartOpen] = useState(false);
 
     return (
@@ -31,5 +34,3 @@ function App() {
         </ApolloProvider>
     );
 }
-
-export default App;
