@@ -1,7 +1,7 @@
-// src/pages/RedirectToFirstCategory.jsx
+import React from "react";
 import { Navigate } from "react-router-dom";
 
+// when you go to "/", redirect to "/all"
 export default function RedirectToFirstCategory() {
-    // this will ensure tests hitting "/" land on "/category/all"
-    return <Navigate to="/category/all" replace />;
+    return <Navigate to="/all" replace />;
 }

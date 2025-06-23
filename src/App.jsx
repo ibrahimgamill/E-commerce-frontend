@@ -1,18 +1,13 @@
-import { useState } from "react";
-import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
+import { ApolloProvider } from "@apollo/client";
+import client from "./apolloClient";       // your ApolloClient setup
 import Header from "./components/Header";
 import CartOverlay from "./components/CartOverlay";
 import ProductList from "./pages/ProductList";
 import ProductDetails from "./pages/ProductDetails";
 import NotFound from "./pages/NotFound";
 import RedirectToFirstCategory from "./pages/RedirectToFirstCategory";
-
-const client = new ApolloClient({
-    uri: import.meta.env.VITE_GRAPHQL_URL,
-    cache: new InMemoryCache(),
-});
 
 export default function App() {
     const [cartOpen, setCartOpen] = useState(false);
@@ -24,9 +19,15 @@ export default function App() {
                 <CartOverlay open={cartOpen} onClose={() => setCartOpen(false)} />
                 <main>
                     <Routes>
+                        {/* "/" -> "/all" */}
                         <Route path="/" element={<RedirectToFirstCategory />} />
-                        <Route path="/category/:categoryId" element={<ProductList />} />
+
+                        {/* "/all", "/clothes", "/tech", etc. */}
+                        <Route path="/:categoryId" element={<ProductList />} />
+
+                        {/* product detail */}
                         <Route path="/product/:productId" element={<ProductDetails />} />
+
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </main>
