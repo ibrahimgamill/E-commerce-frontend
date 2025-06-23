@@ -6,14 +6,14 @@ import { useCart } from "../context/CartContext";
 
 export default function Header({ onCartClick }) {
     const location = useLocation();
-    // page.locator('a[href="/all"]') etc will match
+    // e.g. location.pathname = "/clothes" or "/all"
     const activeCategory = location.pathname.split("/")[1] || "all";
 
     const { loading, error, data } = useQuery(GET_CATEGORIES);
 
-    // Build categories array, injecting "all" first
     let categories = [];
     if (data && Array.isArray(data.categories)) {
+        // prepend the special "all" category
         categories = [{ name: "all" }, ...data.categories];
     }
 
@@ -23,7 +23,7 @@ export default function Header({ onCartClick }) {
     return (
         <header>
             <nav>
-                {loading && <span>Loading...</span>}
+                {loading && <span>Loading…</span>}
                 {!loading &&
                     !error &&
                     categories.map((cat) => (
@@ -39,12 +39,10 @@ export default function Header({ onCartClick }) {
                                     : "category-link"
                             }
                         >
-                            {/* capitalize */}
-                            {cat.name[0].toUpperCase() + cat.name.slice(1)}
+                            {cat.name.charAt(0).toUpperCase() + cat.name.slice(1)}
                         </Link>
                     ))}
             </nav>
-
             <button
                 className="cart-btn"
                 data-testid="cart-btn"

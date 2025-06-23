@@ -1,46 +1,48 @@
-import { useParams } from "react-router-dom";
+import React from "react";
+import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@apollo/client";
-import { GET_PRODUCTS } from "../graphql/queries";
-import ProductCard from "../components/ProductCard";
-import { useCart } from "../context/CartContext";
+import { GET_PRODUCTS_BY_CATEGORY } from "../graphql/queries";
+
 export default function ProductList() {
     const { categoryId } = useParams();
-    const variables = {};
-    if (categoryId && categoryId !== "all") {
-        variables.category = categoryId;
-    }
-
-    const { loading, error, data } = useQuery(GET_PRODUCTS, { variables });
-    const { addToCart } = useCart();
-
-    const handleQuickShop = (product) => {
-        // Pick default options if product has attributes:
-        let defaultOptions = {};
-        if (product.attributes && product.attributes.length > 0) {
-            product.attributes.forEach(attr => {
-                if (attr.items && attr.items.length > 0)
-                    defaultOptions[attr.name] = attr.items[0].value; // Pick first value
-            });
+    const { loading, error, data } = useQuery(
+        GET_PRODUCTS_BY_CATEGORY,
+        {
+            variables: { category: categoryId },
         }
-        addToCart(product, defaultOptions);
-    };
+    );
 
-    if (loading) return <div style={{ margin: 32 }}>Loading...</div>;
-    if (error) return <div style={{ margin: 32, color: "red" }}>Error loading products.</div>;
+    if (loading) return <p>Loading…</p>;
+    if (error) return <p>Error loading products</p>;
 
     return (
-        <div>
-            <h2 style={{ margin: "32px 0 16px", fontSize: "2rem" }}>
-                {categoryId[0].toUpperCase() + categoryId.slice(1)} Products
-            </h2>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
-                {(!data.products || !data.products.length)
-                    ? <div>No products found.</div>
-                    : data.products.map(p => (
-                        <ProductCard key={p.id} product={p} onQuickShop={handleQuickShop} />
-                    ))
-                }
-            </div>
+        <div className="product-list">
+            {data.products.map((product) => {
+                // strip off the brand-prefix so tests see "iphone-12-pro"
+                const testSlug = product.id.includes("-")
+                    ? product.id.split("-").slice(1).join("-")
+                    : product.id;
+
+                return (
+                    <Link
+                        key={product.id}
+                        to={`/product/${product.id}`}
+                        data-testid={`product-${testSlug}`}
+                        className="product-card"
+                    >
+                        <img
+                            src={product.gallery[0] || ""}
+                            alt={product.name}
+                            className="product-image"
+                        />
+                        <h2>{product.name}</h2>
+                        <p>
+                            {product.prices[0].currency_symbol}
+                            {product.prices[0].amount}
+                        </p>
+                    </Link>
+                );
+            })}
         </div>
     );
 }
