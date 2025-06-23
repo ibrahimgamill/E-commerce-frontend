@@ -9,13 +9,17 @@ export default function Header({ onCartClick }) {
     // e.g. location.pathname = "/clothes" or "/all"
     const activeCategory = location.pathname.split("/")[1] || "all";
 
-    const { loading, error, data } = useQuery(GET_CATEGORIES);
+    /*const { loading, error, data } = useQuery(GET_CATEGORIES);
 
     let categories = [];
     if (data && Array.isArray(data.categories)) {
         // prepend the special "all" category
         categories = [{ name: "all" }, ...data.categories];
-    }
+    }*/
+    const { loading, error, data } = useQuery(GET_CATEGORIES, {
+        onError(err)   { console.error("GraphQL error:", err); },
+        onCompleted(d) { console.log("Got categories:", d.categories); }
+    });
 
     const { cartItems = [] } = useCart();
     const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
