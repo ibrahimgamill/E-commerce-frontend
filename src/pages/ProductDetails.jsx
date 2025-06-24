@@ -69,7 +69,11 @@ export default function ProductDetails() {
                                             fontSize: 16,
                                             transition: "border .15s, background .13s"
                                         }}
-                                        data-testid={`product-attribute-${attrKebab}-${item.value}`}
+                                        data-testid={
+                                            selected[attr.name] === item.value
+                                                ? `cart-item-attribute-${attrKebab}-${attrKebab}-selected`
+                                                : `cart-item-attribute-${attrKebab}-${attrKebab}`
+                                        }
                                     >
                                         {attr.type === "swatch"
                                             ? <span style={{
