@@ -6,8 +6,9 @@ import { useCart } from "../context/CartContext";
 export default function ProductList() {
     const { categoryId } = useParams();
     const { loading, error, data } = useQuery(GET_PRODUCTS, {
-        variables: { category: categoryId }
+        variables: { category: (!categoryId || categoryId === "all") ? null : categoryId }
     });
+
 
     const { addToCart } = useCart();
 
