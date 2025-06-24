@@ -1,14 +1,26 @@
 // src/pages/RedirectToFirstCategory.jsx
 import { useQuery } from "@apollo/client";
 import { GET_CATEGORIES } from "../graphql/queries";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function RedirectToFirstCategory() {
     const { loading, error, data } = useQuery(GET_CATEGORIES);
+    const navigate = useNavigate();
 
-    if (loading || error) return null;
-    const cats = data.categories.map(c => c.name);
-    // Always include 'all' in your categories
-    const first = ["all", ...cats.filter(n => n !== "all")][0];
-    return <Navigate to={`/category/${first}`} replace />;
+    useEffect(() => {
+        if (!loading && data?.categories?.length) {
+            // Get first non-"all" category
+            const first = data.categories.find(c => c.name !== "all");
+            if (first) {
+                navigate(`/category/${first.name}`, { replace: true });
+            } else {
+                navigate("/notfound", { replace: true });
+            }
+        }
+    }, [loading, data, navigate]);
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error loading categories.</div>;
+    return null;
 }

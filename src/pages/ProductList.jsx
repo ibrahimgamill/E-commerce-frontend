@@ -1,51 +1,46 @@
-import React from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
-import { GET_PRODUCTS, GET_PRODUCTS_BY_CATEGORY } from "../graphql/queries";
-
+import { GET_PRODUCTS } from "../graphql/queries";
+import ProductCard from "../components/ProductCard";
+import { useCart } from "../context/CartContext";
 export default function ProductList() {
     const { categoryId } = useParams();
+    const { loading, error, data } = useQuery(GET_PRODUCTS, {
+        variables: { category: categoryId }
+    });
 
-    // Determine which query to use
-    const isAll = !categoryId || categoryId === "all";
-    const { loading, error, data } = useQuery(
-        isAll ? GET_PRODUCTS : GET_PRODUCTS_BY_CATEGORY,
-        isAll ? {} : { variables: { category: categoryId } }
-    );
+    const { addToCart } = useCart();
 
-    if (loading) return <p>Loading…</p>;
-    if (error) return <p>Error loading products</p>;
+    const handleQuickShop = (product) => {
+        // Pick default options if product has attributes:
+        let defaultOptions = {};
+        if (product.attributes && product.attributes.length > 0) {
+            product.attributes.forEach(attr => {
+                if (attr.items && attr.items.length > 0)
+                    defaultOptions[attr.name] = attr.items[0].value; // Pick first value
+            });
+        }
+        addToCart(product, defaultOptions);
+    };
+
+    if (loading) return <div style={{ margin: 32 }}>Loading...</div>;
+    if (error) return <div style={{ color: "red", margin: 32 }}>Error loading products.</div>;
 
     return (
-        <div className="product-list">
-            {data.products.map((product) => {
-                // strip off the brand-prefix so tests see "iphone-12-pro"
-                const testSlug = product.id.includes("-")
-                    ? product.id.split("-").slice(1).join("-")
-                    : product.id;
-
-                return (
-                    <Link
+        <div>
+            <h2 style={{ margin: "32px 0 16px 0", fontSize: "2rem" }}>
+                {categoryId[0].toUpperCase() + categoryId.slice(1)} Products
+            </h2>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
+                {(!data.products || data.products.length === 0) && <div>No products found.</div>}
+                {data.products.map(product => (
+                    <ProductCard
                         key={product.id}
-                        to={`/product/${product.id}`}
-                        data-testid={`product-${testSlug}`}
-                        className="product-card"
-                    >
-                        <img
-                            src={product.gallery[0] || ""}
-                            alt={product.name}
-                            className="product-image"
-                        />
-                        <h2>{product.name}</h2>
-                        <p>
-                            {product.prices[0].currency.symbol}
-                            {product.prices[0].amount}
-                        </p>
-                        {/* Example Add to Cart button, optional */}
-                        {/* <button onClick={e => {e.preventDefault(); addToCart(product.id);}}>Add to Cart</button> */}
-                    </Link>
-                );
-            })}
+                        product={product}
+                        onQuickShop={handleQuickShop}
+                    />
+                ))}
+            </div>
         </div>
     );
 }
