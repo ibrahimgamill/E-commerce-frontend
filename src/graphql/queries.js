@@ -1,43 +1,69 @@
 import { gql } from "@apollo/client";
 
+export const GET_PRODUCTS = gql`
+  query GetProducts($category: String) {
+    products(category: $category) {
+      id
+      name
+      inStock
+      gallery
+      description
+      attributes {
+        id
+        name
+        type
+        items {
+          displayValue
+          value
+          id
+        }
+      }
+      prices {
+        amount
+        currency {
+          symbol
+          label
+        }
+      }
+      brand
+    }
+  }
+`;
+
 export const GET_CATEGORIES = gql`
-  query {
+  query GetCategories {
     categories {
       name
     }
   }
 `;
 
-export const GET_PRODUCTS_BY_CATEGORY = gql`
-  query ($category: String!) {
-    products(category: $category) {
-      id
-      name
-      gallery
-      prices {
-        currency_symbol
-        amount
-      }
-    }
-  }
-`;
-
-export const GET_PRODUCT_BY_ID = gql`
-  query ($id: String!) {
+export const GET_PRODUCT = gql`
+  query GetProduct($id: String!) {
     product(id: $id) {
       id
       name
-      description
+      inStock
       gallery
-      prices {
-        currency_symbol
-        amount
-      }
+      description
       attributes {
-        id name type items {
-          display_value value item_id
+        id
+        name
+        type
+        items {
+          displayValue
+          value
+          id
         }
       }
+      prices {
+        amount
+        currency {
+          symbol
+          label
+        }
+      }
+      brand
     }
   }
 `;
