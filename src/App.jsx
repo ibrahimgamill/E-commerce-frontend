@@ -16,13 +16,11 @@ import ProductList from "./pages/ProductList";
 import ProductDetails from "./pages/ProductDetails";
 import NotFound from "./pages/NotFound";
 
-// Create the client once (no export here)
 const client = new ApolloClient({
     uri: import.meta.env.VITE_GRAPHQL_URL,
     cache: new InMemoryCache(),
 });
 
-// Only one default export: the App component
 export default function App() {
     const [cartOpen, setCartOpen] = useState(false);
 
@@ -35,11 +33,14 @@ export default function App() {
                     <Routes>
                         {/* Redirect root "/" to "/all" */}
                         <Route path="/" element={<Navigate to="/all" replace />} />
-                        {/* /all shows all products */}
-                        <Route path="/All" element={<ProductList />} />
-                        {/* Other categories */}
-                        <Route path="/category/:categoryId" element={<ProductList />} />
+
+                        {/* Category route without prefix */}
+                        <Route path="/:categoryId" element={<ProductList />} />
+
+                        {/* Product details remain the same */}
                         <Route path="/product/:productId" element={<ProductDetails />} />
+
+                        {/* Catch-all */}
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </main>
