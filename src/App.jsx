@@ -31,16 +31,16 @@ export default function App() {
                 <CartOverlay open={cartOpen} onClose={() => setCartOpen(false)} />
                 <main>
                     <Routes>
-                        {/* Redirect root "/" to "/all" */}
+                        {/* 1. Redirect root "/" to "/all" */}
                         <Route path="/" element={<Navigate to="/all" replace />} />
 
-                        {/* Category route without prefix */}
-                        <Route path="/:categoryId" element={<ProductList />} />
-
-                        {/* Product details remain the same */}
+                        {/* 2. Product details route */}
                         <Route path="/product/:productId" element={<ProductDetails />} />
 
-                        {/* Catch-all */}
+                        {/* 3. Category route for /all, /tech, etc. */}
+                        <Route path="/:categoryId" element={<ProductList />} />
+
+                        {/* 4. Fallback route */}
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </main>
