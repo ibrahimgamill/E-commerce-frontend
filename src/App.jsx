@@ -26,17 +26,17 @@ const client = new ApolloClient({
 export default function App() {
     const [cartOpen, setCartOpen] = useState(false);
 
-    return (
+    eturn (
         <ApolloProvider client={client}>
             <Router>
                 <Header onCartClick={() => setCartOpen(true)} />
                 <CartOverlay open={cartOpen} onClose={() => setCartOpen(false)} />
                 <main>
                     <Routes>
-                        {/* Redirect root "/" to "/all" */}
+                        {/* Redirect "/" to "/all" */}
                         <Route path="/" element={<Navigate to="/all" replace />} />
-                        {/* /all shows all products */}
-                        <Route path="/All" element={<ProductList />} />
+                        {/* /all is the actual page for all products */}
+                        <Route path="/all" element={<ProductList />} />
                         {/* Other categories */}
                         <Route path="/category/:categoryId" element={<ProductList />} />
                         <Route path="/product/:productId" element={<ProductDetails />} />
