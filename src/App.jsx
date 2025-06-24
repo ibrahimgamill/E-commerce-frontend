@@ -36,7 +36,7 @@ export default function App() {
                         {/* Redirect root "/" to "/all" */}
                         <Route path="/" element={<Navigate to="/all" replace />} />
                         {/* /all shows all products */}
-                        <Route path="/all" element={<ProductList />} />
+                        <Route path="/All" element={<ProductList />} />
                         {/* Other categories */}
                         <Route path="/category/:categoryId" element={<ProductList />} />
                         <Route path="/product/:productId" element={<ProductDetails />} />
