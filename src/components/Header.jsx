@@ -28,7 +28,7 @@ export default function Header({ onCartClick }) {
                         return (
                             <Link
                                 key={cat.name}
-                                to={cat.name === "all" ? "/all" : `/category/${cat.name}`}
+                                to={`/category/${cat.name}`}
                                 className={`nav-link${isActive ? ' active' : ''}`}
                                 data-testid={isActive ? 'active-category-link' : 'category-link'}
                             >
