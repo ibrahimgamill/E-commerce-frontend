@@ -1,4 +1,3 @@
-// src/App.jsx
 import { useState } from "react";
 import {
     ApolloClient,
@@ -8,14 +7,14 @@ import {
 import {
     BrowserRouter as Router,
     Routes,
-    Route
+    Route,
+    Navigate
 } from "react-router-dom";
 import Header from "./components/Header";
 import CartOverlay from "./components/CartOverlay";
 import ProductList from "./pages/ProductList";
 import ProductDetails from "./pages/ProductDetails";
 import NotFound from "./pages/NotFound";
-import RedirectToFirstCategory from "./pages/RedirectToFirstCategory";
 
 // Create the client once (no export here)
 const client = new ApolloClient({
@@ -34,7 +33,11 @@ export default function App() {
                 <CartOverlay open={cartOpen} onClose={() => setCartOpen(false)} />
                 <main>
                     <Routes>
-                        <Route path="/" element={<RedirectToFirstCategory />} />
+                        {/* Redirect root "/" to "/all" */}
+                        <Route path="/" element={<Navigate to="/all" replace />} />
+                        {/* /all shows all products */}
+                        <Route path="/all" element={<ProductList />} />
+                        {/* Other categories */}
                         <Route path="/category/:categoryId" element={<ProductList />} />
                         <Route path="/product/:productId" element={<ProductDetails />} />
                         <Route path="*" element={<NotFound />} />
