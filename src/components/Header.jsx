@@ -7,41 +7,38 @@ import { useCart } from '../context/CartContext';
 
 export default function Header({ onCartClick }) {
     const location = useLocation();
-    // get the part after /category/, or default to 'all'
-    const activeCategory = location.pathname.startsWith('/category/')
-        ? location.pathname.split('/')[2]
-        : 'all';
+    const parts = location.pathname.split('/');
+    // if URL is /category/whatever, take whatever, else default to 'all'
+    const activeCategory =
+        parts[1] === 'category' && parts[2] ? parts[2] : 'all';
 
     const { loading, error, data } = useQuery(GET_CATEGORIES);
-
-    // build nav list: always start with all, then fetched categories
-    const categories = [{ name: 'all' }, ...(data?.categories || [])];
+    // grab fetched categories or empty array
+    const fetched = data && data.categories ? data.categories : [];
+    // always start with the “all” tab
+    const categories = [{ name: 'all' }, ...fetched];
 
     const { cartItems = [] } = useCart();
-    const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    const totalItems = cartItems.reduce((sum, i) => sum + i.quantity, 0);
 
     return (
         <header>
             <nav>
-                {loading && <span>Loading...</span>}
+                {loading && <span>Loading…</span>}
                 {!loading && !error && categories.map(cat => {
-                    const name = cat.name;
-                    const path = `/category/${name}`;
-                    const isActive = name === activeCategory;
-
+                    const isActive = cat.name === activeCategory;
                     return (
                         <Link
-                            key={name}
-                            to={path}
+                            key={cat.name}
+                            to={`/category/${cat.name}`}
                             className={`nav-link${isActive ? ' active' : ''}`}
                             data-testid={isActive ? 'active-category-link' : 'category-link'}
                         >
-                            {name.charAt(0).toUpperCase() + name.slice(1)}
+                            {cat.name.charAt(0).toUpperCase() + cat.name.slice(1)}
                         </Link>
                     );
                 })}
             </nav>
-
             <button
                 className="cart-btn"
                 data-testid="cart-btn"
@@ -49,9 +46,7 @@ export default function Header({ onCartClick }) {
             >
                 🛒
                 {totalItems > 0 && (
-                    <span className="cart-bubble">
-            {totalItems}
-          </span>
+                    <span className="cart-bubble">{totalItems}</span>
                 )}
             </button>
         </header>
