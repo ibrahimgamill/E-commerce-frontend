@@ -28,6 +28,7 @@ export default function CartOverlay({ open, onClose }) {
 
             {/* The Cart Sidebar */}
             <aside
+                data-testid={open ? "cart-overlay" : undefined}
                 className="cart-overlay"
                 style={{
                     transform: open ? "translateX(0)" : "translateX(120%)",

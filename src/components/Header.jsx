@@ -7,8 +7,8 @@ import { useCart } from '../context/CartContext';
 
 export default function Header({ onCartClick }) {
     const location = useLocation();
-    const parts = location.pathname.split('/');
-    const activeCategory = parts[1] === 'category' && parts[2] ? parts[2] : 'all';
+    const path = location.pathname.split('/')[1] || 'all'; // e.g., 'all', 'tech', 'clothes'
+    const activeCategory = ['all', 'tech', 'clothes'].includes(path) ? path : 'all';
 
     const { loading, error, data } = useQuery(GET_CATEGORIES);
     const fetched = data && Array.isArray(data.categories) ? data.categories : [];
