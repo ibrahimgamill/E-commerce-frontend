@@ -8,36 +8,34 @@ import { useCart } from '../context/CartContext';
 export default function Header({ onCartClick }) {
     const location = useLocation();
     const parts = location.pathname.split('/');
-    // if URL is /category/whatever, take whatever, else default to 'all'
-    const activeCategory =
-        parts[1] === 'category' && parts[2] ? parts[2] : 'all';
+    const activeCategory = parts[1] === 'category' && parts[2] ? parts[2] : 'all';
 
     const { loading, error, data } = useQuery(GET_CATEGORIES);
-    // grab fetched categories or empty array
-    const fetched = data && data.categories ? data.categories : [];
-    // always start with the “all” tab
+    const fetched = data && Array.isArray(data.categories) ? data.categories : [];
     const categories = [{ name: 'all' }, ...fetched];
 
     const { cartItems = [] } = useCart();
-    const totalItems = cartItems.reduce((sum, i) => sum + i.quantity, 0);
+    const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
     return (
         <header>
             <nav>
                 {loading && <span>Loading…</span>}
-                {!loading && !error && categories.map(cat => {
-                    const isActive = cat.name === activeCategory;
-                    return (
-                        <Link
-                            key={cat.name}
-                            to={`/category/${cat.name}`}
-                            className={`nav-link${isActive ? ' active' : ''}`}
-                            data-testid={isActive ? 'active-category-link' : 'category-link'}
-                        >
-                            {cat.name.charAt(0).toUpperCase() + cat.name.slice(1)}
-                        </Link>
-                    );
-                })}
+                {!loading &&
+                    !error &&
+                    categories.map((cat) => {
+                        const isActive = cat.name === activeCategory;
+                        return (
+                            <Link
+                                key={cat.name}
+                                to={`/category/${cat.name}`}
+                                className={`nav-link${isActive ? ' active' : ''}`}
+                                data-testid={isActive ? 'active-category-link' : 'category-link'}
+                            >
+                                {cat.name.charAt(0).toUpperCase() + cat.name.slice(1)}
+                            </Link>
+                        );
+                    })}
             </nav>
             <button
                 className="cart-btn"
