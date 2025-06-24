@@ -1,15 +1,16 @@
 import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@apollo/client";
-import { GET_PRODUCTS_BY_CATEGORY } from "../graphql/queries";
+import { GET_PRODUCTS, GET_PRODUCTS_BY_CATEGORY } from "../graphql/queries";
 
 export default function ProductList() {
     const { categoryId } = useParams();
+
+    // Determine which query to use
+    const isAll = !categoryId || categoryId === "all";
     const { loading, error, data } = useQuery(
-        GET_PRODUCTS_BY_CATEGORY,
-        {
-            variables: { category: categoryId },
-        }
+        isAll ? GET_PRODUCTS : GET_PRODUCTS_BY_CATEGORY,
+        isAll ? {} : { variables: { category: categoryId } }
     );
 
     if (loading) return <p>Loading…</p>;
@@ -37,9 +38,11 @@ export default function ProductList() {
                         />
                         <h2>{product.name}</h2>
                         <p>
-                            {product.prices[0].currency_symbol}
+                            {product.prices[0].currency.symbol}
                             {product.prices[0].amount}
                         </p>
+                        {/* Example Add to Cart button, optional */}
+                        {/* <button onClick={e => {e.preventDefault(); addToCart(product.id);}}>Add to Cart</button> */}
                     </Link>
                 );
             })}
