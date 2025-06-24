@@ -39,7 +39,13 @@ export default function ProductDetails() {
 
             {/* Product Info */}
             <div style={{ maxWidth: 480 }}>
-                <h1 style={{ fontWeight: 800, fontSize: 26, margin: "0 0 7px" }}>{product.name}</h1>
+                <h1
+                    data-testid={`product-${kebabCase(product.name)}`}
+                    style={{ fontWeight: 800, fontSize: 26, margin: "0 0 7px" }}
+                >
+                    {product.name}
+                </h1>
+
                 <div style={{ color: "#888", fontWeight: 500, fontSize: 17 }}>{product.brand}</div>
 
                 {/* Attributes */}
@@ -70,11 +76,6 @@ export default function ProductDetails() {
                                             fontSize: 16,
                                             transition: "border .15s, background .13s"
                                         }}
-                                        data-testid={
-                                            selected[attr.name] === item.value
-                                                ? `cart-item-attribute-${attrKebab}-${attrKebab}-selected`
-                                                : `cart-item-attribute-${attrKebab}-${attrKebab}`
-                                        }
                                     >
                                         {attr.type === "swatch"
                                             ? <span style={{

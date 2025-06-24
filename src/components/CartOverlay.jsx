@@ -70,7 +70,7 @@ export default function CartOverlay({ open, onClose }) {
                             {attr.name}:
                           </span>
                                                     <span
-                                                        data-testid={`cart-item-attribute-${attr.name.replace(/\s+/g, "-").toLowerCase()}-${attr.name.replace(/\s+/g, "-").toLowerCase()}-selected`}
+                                                        data-testid={`product-attribute-${attr.name.replace(/\s+/g, "-").toLowerCase()}-${item.options?.[attr.name] || attr.items[0]?.value}`}
                                                         style={{
                                                             marginLeft: 7,
                                                             fontSize: 13,
