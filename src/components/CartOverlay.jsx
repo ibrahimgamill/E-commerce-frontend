@@ -82,7 +82,7 @@ export default function CartOverlay({ open, onClose }) {
                                                             fontWeight: 500
                                                         }}
                                                     >
-                            {item.options && item.options[attr.name] ? item.options[attr.name] : attr.items[0]?.value}
+                            { item.options?.[attr.name] || attr.items[0]?.value }
                           </span>
                                                 </div>
                                             ))}
