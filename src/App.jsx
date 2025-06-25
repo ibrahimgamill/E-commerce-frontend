@@ -33,7 +33,7 @@ export default function App() {
                     <Routes>
                         {/* 1. Redirect root "/" to "/all" */}
                         <Route path="/" element={<Navigate to="/all" replace />} />
-                        <Route path="/all" element={<ProductList />} />
+
                         {/* 2. Product details route */}
                         <Route path="/product/:productId" element={<ProductDetails />} />
 
