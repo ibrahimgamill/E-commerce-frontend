@@ -63,7 +63,6 @@ export default function ProductDetails() {
                                     <button
                                         key={item.id}
                                         type="button"
-                                        data-testid={`product-attribute-${attrKebab}-${item.value}`}
                                         onClick={() => setSelected(sel => ({ ...sel, [attr.name]: item.value }))}
                                         style={{
                                             minWidth: 38, minHeight: 38,
