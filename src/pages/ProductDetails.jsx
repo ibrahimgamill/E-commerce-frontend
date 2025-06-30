@@ -173,7 +173,7 @@ export default function ProductDetails() {
                     disabled={isSelectable && !allSelected}
                     onClick={() => {
                         addToCart(product, selected);
-                        
+
                     }}
                 >
                     Add to Cart
