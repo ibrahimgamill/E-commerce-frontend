@@ -1,4 +1,4 @@
-// src/components/Header.jsx
+
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
@@ -21,16 +21,15 @@ export default function Header() {
         <header>
             <nav>
                 {loading && <span>Loading…</span>}
-                {!loading &&
-                    !error &&
+                {!loading && !error &&
                     categories.map((cat) => {
                         const isActive = cat.name === activeCategory;
                         return (
                             <Link
                                 key={cat.name}
-                                to={cat.name === "all" ? "/all" : `/${cat.name}`}
-                                className={`nav-link${isActive ? " active" : ""}`}
-                                data-testid={isActive ? "active-category-link" : "category-link"}
+                                to={cat.name === 'all' ? '/all' : `/${cat.name}`}
+                                className={`nav-link${isActive ? ' active' : ''}`}
+                                data-testid={isActive ? 'active-category-link' : 'category-link'}
                             >
                                 {cat.name.charAt(0).toUpperCase() + cat.name.slice(1)}
                             </Link>

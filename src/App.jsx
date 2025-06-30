@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
     ApolloClient,
     InMemoryCache,
@@ -10,6 +9,8 @@ import {
     Route,
     Navigate
 } from "react-router-dom";
+
+import { CartProvider } from "./context/CartContext";      // ← import your provider
 import Header from "./components/Header";
 import CartOverlay from "./components/CartOverlay";
 import ProductList from "./pages/ProductList";
@@ -22,29 +23,22 @@ const client = new ApolloClient({
 });
 
 export default function App() {
-    const [cartOpen, setCartOpen] = useState(false);
-
     return (
         <ApolloProvider client={client}>
-            <Router>
-                <Header onCartClick={() => setCartOpen(true)} />
-                <CartOverlay open={cartOpen} onClose={() => setCartOpen(false)} />
-                <main>
-                    <Routes>
-                        {/* 1. Redirect root "/" to "/all" */}
-                        <Route path="/" element={<Navigate to="/all" replace />} />
-
-                        {/* 2. Product details route */}
-                        <Route path="/product/:productId" element={<ProductDetails />} />
-
-                        {/* 3. Category route for /all, /tech, etc. */}
-                        <Route path="/:categoryId" element={<ProductList />} />
-
-                        {/* 4. Fallback route */}
-                        <Route path="*" element={<NotFound />} />
-                    </Routes>
-                </main>
-            </Router>
+            <CartProvider>                      {/* ← wrap in CartProvider */}
+                <Router>
+                    <Header />                      {/* no more onCartClick prop */}
+                    <CartOverlay />                 {/* no more open/onClose props */}
+                    <main>
+                        <Routes>
+                            <Route path="/" element={<Navigate to="/all" replace />} />
+                            <Route path="/product/:productId" element={<ProductDetails />} />
+                            <Route path="/:categoryId" element={<ProductList />} />
+                            <Route path="*" element={<NotFound />} />
+                        </Routes>
+                    </main>
+                </Router>
+            </CartProvider>
         </ApolloProvider>
     );
 }
