@@ -5,7 +5,7 @@ import { useQuery } from '@apollo/client';
 import { GET_CATEGORIES } from '../graphql/queries';
 import { useCart } from '../context/CartContext';
 
-export default function Header({ onCartClick }) {
+export default function Header() {
     const location = useLocation();
     const path = location.pathname.split('/')[1] || 'all'; // e.g., 'all', 'tech', 'clothes'
     const activeCategory = ['all', 'tech', 'clothes'].includes(path) ? path : 'all';
@@ -14,7 +14,7 @@ export default function Header({ onCartClick }) {
     const fetched = data && Array.isArray(data.categories) ? data.categories : [];
     const categories = [{ name: 'all' }, ...fetched];
 
-    const { cartItems = [] } = useCart();
+    const { cartItems = [], openCart } = useCart();
     const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
     return (
@@ -40,7 +40,8 @@ export default function Header({ onCartClick }) {
             <button
                 className="cart-btn"
                 data-testid="cart-btn"
-                onClick={onCartClick}
+                onClick={openCart}
+                aria-label="Open cart"
             >
                 🛒
                 {totalItems > 0 && (
