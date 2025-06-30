@@ -45,7 +45,7 @@ export default function ProductDetails() {
 
     const priceObj = product.prices?.[0];
     const isSelectable = attrs.length > 0;
-    const allSelected = attrs.every(attr => selected[attr.name]);
+    const allSelected = attrs.every(attr => Boolean(selected[attr.name]));
     // ────────────────────────────────────────────────────────────────────────────
 
     // Description rendering (safe, avoids dangerouslySetInnerHTML)
@@ -104,33 +104,26 @@ export default function ProductDetails() {
                                         }
                                         style={{
                                             minWidth: 38, minHeight: 38,
-                                            background:
-                                                attr.type === "swatch"
-                                                    ? item.value
-                                                    : (selected[attr.name] === item.value
-                                                        ? "#27ae60"
-                                                        : "#f3f3f3"),
-                                            color:
-                                                attr.type === "swatch"
-                                                    ? "transparent"
-                                                    : (selected[attr.name] === item.value
-                                                        ? "#fff"
-                                                        : "#333"),
-                                            border:
-                                                selected[attr.name] === item.value
-                                                    ? "2.5px solid #27ae60"
-                                                    : "1.5px solid #ddd",
+                                            background: attr.type === "swatch"
+                                                ? item.value
+                                                : (selected[attr.name] === item.value
+                                                    ? "#27ae60"
+                                                    : "#f3f3f3"),
+                                            color: attr.type === "swatch"
+                                                ? "transparent"
+                                                : (selected[attr.name] === item.value
+                                                    ? "#fff"
+                                                    : "#333"),
+                                            border: selected[attr.name] === item.value
+                                                ? "2.5px solid #27ae60"
+                                                : "1.5px solid #ddd",
                                             borderRadius: 6,
                                             cursor: "pointer",
                                             fontWeight: 600,
                                             fontSize: 16,
                                             transition: "border .15s, background .13s"
                                         }}
-                                        data-testid={
-                                            selected[attr.name] === item.value
-                                                ? `cart-item-attribute-${attrKebab}-${attrKebab}-selected`
-                                                : `cart-item-attribute-${attrKebab}-${attrKebab}`
-                                        }
+                                        data-testid={`product-attribute-${attrKebab}-${item.value}`}
                                     >
                                         {attr.type === "swatch" ? (
                                             <span style={{
@@ -156,8 +149,7 @@ export default function ProductDetails() {
                     Price:
                 </div>
                 <div style={{ fontWeight: 800, fontSize: 20, marginBottom: 15 }}>
-                    {priceObj?.currency?.symbol ?? "$"}
-                    {(priceObj?.amount ?? 0).toFixed(2)}
+                    {priceObj?.currency?.symbol ?? "$"}{(priceObj?.amount ?? 0).toFixed(2)}
                 </div>
 
                 {/* Add to Cart */}

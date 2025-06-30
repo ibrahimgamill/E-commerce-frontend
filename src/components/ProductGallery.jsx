@@ -1,4 +1,4 @@
-// src/components/ProductGallery.jsx
+
 import React, { useState } from "react";
 
 export default function ProductGallery({ images = [] }) {
@@ -7,7 +7,7 @@ export default function ProductGallery({ images = [] }) {
     if (!images.length) return null;
 
     return (
-        <div data-testid="product-gallery" style={{ display: "flex" }}>
+        <div style={{ display: "flex" }}>
             <div style={{ marginRight: 10 }}>
                 {images.map((img, idx) => (
                     <img
