@@ -45,7 +45,7 @@ export default function ProductDetails() {
             ],
         });
     }
-    
+
 
     const priceObj = product.prices?.[0];
     const isSelectable = attrs.length > 0;
@@ -173,7 +173,7 @@ export default function ProductDetails() {
                     disabled={isSelectable && !allSelected}
                     onClick={() => {
                         addToCart(product, selected);
-                        alert("Added to cart!");
+                        
                     }}
                 >
                     Add to Cart
