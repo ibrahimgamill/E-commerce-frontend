@@ -1,11 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 const CartContext = createContext();
-
 const CART_STORAGE_KEY = "ecommerce_cart";
 
 export function CartProvider({ children }) {
-    // Initialize from localStorage or default to empty
+    // existing cartItems state & persistence
     const [cartItems, setCartItems] = useState(() => {
         try {
             const stored = localStorage.getItem(CART_STORAGE_KEY);
@@ -14,13 +13,17 @@ export function CartProvider({ children }) {
             return [];
         }
     });
-
-    // Save cart to localStorage whenever it changes
     useEffect(() => {
         localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
     }, [cartItems]);
 
-    // Add, increment, decrement, clear logic (unchanged)
+    // ─── NEW: overlay open/close state ─────────────────────────────
+    const [isCartOpen, setCartOpen] = useState(false);
+    const openCart = () => setCartOpen(true);
+    const closeCart = () => setCartOpen(false);
+    // ────────────────────────────────────────────────────────────────
+
+    // Add to cart (unchanged), but call openCart() afterward
     const addToCart = (product, options = {}) => {
         setCartItems(items => {
             const idx = items.findIndex(
@@ -35,10 +38,10 @@ export function CartProvider({ children }) {
                 return [...items, { product, options, quantity: 1 }];
             }
         });
+        openCart();  // ← open overlay when an item is added
     };
 
     const increment = (product, options = {}) => addToCart(product, options);
-
     const decrement = (product, options = {}) => {
         setCartItems(items => {
             const idx = items.findIndex(
@@ -57,12 +60,19 @@ export function CartProvider({ children }) {
             return items;
         });
     };
-
     const clearCart = () => setCartItems([]);
 
     return (
         <CartContext.Provider value={{
-            cartItems, addToCart, increment, decrement, clearCart
+            cartItems,
+            addToCart,
+            increment,
+            decrement,
+            clearCart,
+            // ─── expose the new overlay state and closer ───
+            isCartOpen,
+            closeCart
+            // ───────────────────────────────────────────────
         }}>
             {children}
         </CartContext.Provider>

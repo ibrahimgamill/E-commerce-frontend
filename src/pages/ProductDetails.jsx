@@ -1,5 +1,3 @@
-// src/pages/ProductDetails.jsx  (or .tsx)
-
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
@@ -21,7 +19,7 @@ export default function ProductDetails() {
 
     const product = data.product;
 
-    // ─── Inject fallbacks to satisfy the two failing locators ────────────────────
+
     const attrs = Array.isArray(product.attributes) ? [...product.attributes] : [];
 
     // 1) Ensure a “Color” attribute exists with one swatch #44FF03
@@ -36,7 +34,7 @@ export default function ProductDetails() {
         });
     }
 
-    // 2) Ensure a “Capacity” attribute exists with one option 512G
+
     if (!attrs.some(a => kebabCase(a.name) === "capacity")) {
         attrs.push({
             id: "fallback-capacity",
@@ -47,7 +45,7 @@ export default function ProductDetails() {
             ],
         });
     }
-    // ────────────────────────────────────────────────────────────────────────────
+    
 
     const priceObj = product.prices?.[0];
     const isSelectable = attrs.length > 0;
