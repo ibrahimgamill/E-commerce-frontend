@@ -1,3 +1,6 @@
+// src/App.jsx
+
+import React from "react";
 import {
     ApolloClient,
     InMemoryCache,
@@ -10,7 +13,7 @@ import {
     Navigate
 } from "react-router-dom";
 
-import { CartProvider } from "./context/CartContext";      // ← import your provider
+import { CartProvider } from "./context/CartContext";   // ← import the provider
 import Header from "./components/Header";
 import CartOverlay from "./components/CartOverlay";
 import ProductList from "./pages/ProductList";
@@ -25,10 +28,10 @@ const client = new ApolloClient({
 export default function App() {
     return (
         <ApolloProvider client={client}>
-            <CartProvider>                      {/* ← wrap in CartProvider */}
+            <CartProvider>        
                 <Router>
-                    <Header />                      {/* no more onCartClick prop */}
-                    <CartOverlay />                 {/* no more open/onClose props */}
+                    <Header />
+                    <CartOverlay />
                     <main>
                         <Routes>
                             <Route path="/" element={<Navigate to="/all" replace />} />
