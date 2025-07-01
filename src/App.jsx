@@ -28,7 +28,7 @@ const client = new ApolloClient({
 export default function App() {
     return (
         <ApolloProvider client={client}>
-            <CartProvider>        
+            <CartProvider>
                 <Router>
                     <Header />
                     <CartOverlay />
