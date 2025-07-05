@@ -42,7 +42,17 @@ export default function Header() {
                         );
                     })}
             </nav>
-            <button data-testid="cart-btn" onClick={() => openCart()} >🛒</button>
+            <button
+                className="cart-btn"
+                data-testid="cart-btn"
+                onClick={() => openCart()}
+                aria-label="Open cart"
+            >
+                🛒
+                {totalItems > 0 && (
+                    <span className="cart-bubble">{totalItems}</span>
+                )}
+            </button>
         </header>
     );
 }
