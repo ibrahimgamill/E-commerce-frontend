@@ -1,11 +1,10 @@
-// src/context/CartContext.js
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 const CartContext = createContext();
 const CART_STORAGE_KEY = "ecommerce_cart";
 
 export function CartProvider({ children }) {
-    // --- existing cartItems state + localStorage persistence ---
+    // 1) persist cartItems
     const [cartItems, setCartItems] = useState(() => {
         try {
             const stored = localStorage.getItem(CART_STORAGE_KEY);
@@ -18,12 +17,12 @@ export function CartProvider({ children }) {
         localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
     }, [cartItems]);
 
-    // --- NEW: overlay open/close state ---
+    // 2) overlay open/close state
     const [isCartOpen, setCartOpen] = useState(false);
     const openCart = () => setCartOpen(true);
     const closeCart = () => setCartOpen(false);
 
-    // --- existing add/inc/dec/clear logic, plus openCart() on add ---
+    // 3) add/inc/dec/clear
     const addToCart = (product, options = {}) => {
         setCartItems(items => {
             const idx = items.findIndex(
@@ -40,9 +39,7 @@ export function CartProvider({ children }) {
         });
         openCart(); // ← automatically open overlay
     };
-
-    const increment = (product, options = {}) => addToCart(product, options);
-
+    const increment = (p, opts = {}) => addToCart(p, opts);
     const decrement = (product, options = {}) => {
         setCartItems(items => {
             const idx = items.findIndex(
@@ -51,18 +48,17 @@ export function CartProvider({ children }) {
                     JSON.stringify(it.options) === JSON.stringify(options)
             );
             if (idx > -1) {
-                const newItems = [...items];
-                if (newItems[idx].quantity > 1) {
-                    newItems[idx].quantity -= 1;
+                const copy = [...items];
+                if (copy[idx].quantity > 1) {
+                    copy[idx].quantity -= 1;
                 } else {
-                    newItems.splice(idx, 1);
+                    copy.splice(idx, 1);
                 }
-                return newItems;
+                return copy;
             }
             return items;
         });
     };
-
     const clearCart = () => setCartItems([]);
 
     return (
@@ -73,7 +69,7 @@ export function CartProvider({ children }) {
                 increment,
                 decrement,
                 clearCart,
-                // expose the new overlay controls:
+                // expose overlay controls:
                 isCartOpen,
                 openCart,
                 closeCart,

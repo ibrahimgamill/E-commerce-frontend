@@ -1,5 +1,3 @@
-// src/App.jsx
-
 import React from "react";
 import {
     ApolloClient,
@@ -13,7 +11,7 @@ import {
     Navigate
 } from "react-router-dom";
 
-import { CartProvider } from "./context/CartContext";   // ← import the provider
+import { CartProvider } from "./context/CartContext";
 import Header from "./components/Header";
 import CartOverlay from "./components/CartOverlay";
 import ProductList from "./pages/ProductList";
