@@ -20,10 +20,12 @@ export default function Header() {
 
     return (
         <header>
-            style={{
-            position: "relative",
-            zIndex: 1000   // ensure header sits above the overlay backdrop
-        }}
+            <header
+                style={{
+                    position: "relative",
+                    zIndex: 1000,   // ensure header sits above the overlay backdrop
+                }}
+            >
             <nav>
                 {loading && <span>Loading…</span>}
                 {!loading &&
