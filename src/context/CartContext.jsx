@@ -1,6 +1,17 @@
+// src/context/CartContext.js
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-const CartContext = createContext();
+export const CartContext = createContext({
+    cartItems: [],
+    addToCart: /** @type {(product:any, options?:object)=>void} */ (() => {}),
+    increment: /** @type {(product:any, options?:object)=>void} */ (() => {}),
+    decrement: /** @type {(product:any, options?:object)=>void} */ (() => {}),
+    clearCart: /** @type {()=>void} */ (() => {}),
+    isCartOpen: false,
+    openCart: /** @type {()=>void} */ (() => {}),
+    closeCart: /** @type {()=>void} */ (() => {}),
+});
+
 const CART_STORAGE_KEY = "ecommerce_cart";
 
 export function CartProvider({ children }) {

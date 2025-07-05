@@ -20,6 +20,10 @@ export default function Header() {
 
     return (
         <header>
+            style={{
+            position: "relative",
+            zIndex: 1000   // ensure header sits above the overlay backdrop
+        }}
             <nav>
                 {loading && <span>Loading…</span>}
                 {!loading &&
@@ -38,17 +42,7 @@ export default function Header() {
                         );
                     })}
             </nav>
-            <button
-                className="cart-btn"
-                data-testid="cart-btn"
-                onClick={openCart}
-                aria-label="Open cart"
-            >
-                🛒
-                {totalItems > 0 && (
-                    <span className="cart-bubble">{totalItems}</span>
-                )}
-            </button>
+            <button data-testid="cart-btn" onClick={() => openCart()} >🛒</button>
         </header>
     );
 }
