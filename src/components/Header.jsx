@@ -11,21 +11,20 @@ export default function Header() {
         ? path
         : "all";
 
-    const { loading, error, data } = useQuery(GET_CATEGORIES);
+    const {loading, error, data} = useQuery(GET_CATEGORIES);
     const fetched = data && Array.isArray(data.categories) ? data.categories : [];
-    const categories = [{ name: "all" }, ...fetched];
+    const categories = [{name: "all"}, ...fetched];
 
-    const { cartItems = [], openCart } = useCart();
+    const {cartItems = [], openCart} = useCart();
     const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
     return (
-        <header>
-            <header
-                style={{
-                    position: "relative",
-                    zIndex: 1000,   // ensure header sits above the overlay backdrop
-                }}
-            >
+        <header
+            style={{
+                position: "relative",
+                zIndex: 1000,   // ensure header sits above the overlay backdrop
+            }}
+        >
             <nav>
                 {loading && <span>Loading…</span>}
                 {!loading &&
