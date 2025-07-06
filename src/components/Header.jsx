@@ -22,7 +22,8 @@ export default function Header() {
         <header
             style={{
                 position: "relative",
-                zIndex: 10000,   // ensure header sits above the cart overlay
+                zIndex: 9999,  // above cart overlay
+                background: "#fff",
             }}
         >
             <nav>

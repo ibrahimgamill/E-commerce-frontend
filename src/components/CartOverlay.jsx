@@ -1,3 +1,4 @@
+// src/components/CartOverlay.jsx
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import "./CartOverlay.css";
@@ -12,13 +13,14 @@ export default function CartOverlay() {
         isCartOpen,
         closeCart,
     } = useCart();
-    // 1) whenever the route changes, auto-close the overlay
+
+    // auto-close on route change
     const { pathname } = useLocation();
     useEffect(() => {
         if (isCartOpen) closeCart();
     }, [pathname, isCartOpen, closeCart]);
 
-    // 2) if it’s closed, render nothing
+    // if closed, render nothing
     if (!isCartOpen) return null;
 
     const total = cartItems.reduce(
@@ -30,33 +32,39 @@ export default function CartOverlay() {
 
     return (
         <>
-            <div className="cart-overlay-bg" onClick={closeCart} />
+            {/* backdrop */}
+            <div
+                className="cart-overlay-bg"
+                onClick={closeCart}
+            />
 
             <aside
                 data-testid="cart-overlay"
                 className="cart-overlay"
                 aria-hidden={false}
-                style={{ transform: "translateX(0)", pointerEvents: "auto" }}
             >
+                {/* header */}
                 <div className="cart-overlay-header">
-                    <span style={{ fontWeight: 700, fontSize: 20 }}>My Cart</span>
-                    <span style={{ color: "#888", fontSize: 15, marginLeft: 9 }}>
+                    <strong style={{ fontSize: 20 }}>My Cart</strong>
+                    <span style={{ marginLeft: 8, color: "#888" }}>
             {itemCountText}
           </span>
-                    <button className="cart-overlay-close" onClick={closeCart}>
-                        ×
-                    </button>
+                    <button
+                        className="cart-overlay-close"
+                        onClick={closeCart}
+                    >×</button>
                 </div>
 
+                {/* content */}
                 <div className="cart-overlay-content">
                     {cartItems.length === 0 ? (
-                        <div style={{ padding: "38px 0", textAlign: "center", color: "#aaa" }}>
+                        <div style={{ padding: 40, textAlign: "center", color: "#aaa" }}>
                             Your cart is empty.
                         </div>
                     ) : (
-                        cartItems.map((item, idx) => (
+                        cartItems.map((item, i) => (
                             <div
-                                key={`${item.product.id}-${idx}`}
+                                key={item.product.id + "-" + i}
                                 className="cart-overlay-item"
                                 data-testid={`cart-item-attribute-${(
                                     item.product.attributes?.[0]?.name || "none"
@@ -69,96 +77,66 @@ export default function CartOverlay() {
                                     alt={item.product.name}
                                     className="cart-overlay-img"
                                 />
-                                <div style={{ flex: 1, minWidth: 0 }}>
-                                    <div style={{ fontWeight: 700, fontSize: 16 }}>
-                                        {item.product.name}
-                                    </div>
-                                    <div
-                                        style={{ color: "#888", fontSize: 13, margin: "1px 0 6px 0" }}
-                                    >
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontWeight: 700 }}>{item.product.name}</div>
+                                    <div style={{ color: "#888", fontSize: 13 }}>
                                         {item.product.brand}
                                     </div>
-                                    {item.product.attributes?.length > 0 && (
-                                        <div style={{ margin: "2px 0" }}>
-                                            {item.product.attributes.map(attr => (
-                                                <div key={attr.name} style={{ marginBottom: 2 }}>
-                          <span style={{ fontWeight: 600, fontSize: 13 }}>
-                            {attr.name}:
-                          </span>
-                                                    <span
-                                                        data-testid={`cart-item-attribute-${attr.name
-                                                            .replace(/\s+/g, "-")
-                                                            .toLowerCase()}-${attr.name
-                                                            .replace(/\s+/g, "-")
-                                                            .toLowerCase()}-selected`}
-                                                        style={{
-                                                            marginLeft: 7,
-                                                            fontSize: 13,
-                                                            color: "#222",
-                                                            border: "1px solid #eee",
-                                                            padding: "1px 8px",
-                                                            borderRadius: 4,
-                                                            background: "#f5f5f5",
-                                                            fontWeight: 500,
-                                                        }}
-                                                    >
-                            {item.options?.[attr.name] || attr.items[0]?.value}
-                          </span>
-                                                </div>
-                                            ))}
+                                    {item.product.attributes?.map(attr => (
+                                        <div key={attr.id} style={{ margin: "4px 0" }}>
+                                            <small style={{ fontWeight: 600 }}>{attr.name}:</small>
+                                            <span
+                                                data-testid={`cart-item-attribute-${attr.name
+                                                    .replace(/\s+/g, "-")
+                                                    .toLowerCase()}-${attr.name
+                                                    .replace(/\s+/g, "-")
+                                                    .toLowerCase()}-selected`}
+                                                style={{
+                                                    marginLeft: 6,
+                                                    padding: "2px 6px",
+                                                    border: "1px solid #eee",
+                                                    borderRadius: 4,
+                                                    background: "#f5f5f5",
+                                                    fontSize: 12,
+                                                }}
+                                            >
+                        {item.options?.[attr.name] || attr.items[0].value}
+                      </span>
                                         </div>
-                                    )}
-                                    <div style={{ fontWeight: 600, fontSize: 15, marginTop: 6 }}>
+                                    ))}
+                                    <div style={{ marginTop: 6, fontWeight: 600 }}>
                                         {item.product.prices?.[0]?.currency?.symbol || "$"}
                                         {(item.product.prices?.[0]?.amount || 0).toFixed(2)}
                                     </div>
                                 </div>
 
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        alignItems: "center",
-                                        gap: 8,
-                                        marginLeft: 8,
-                                    }}
-                                >
+                                <div style={{ textAlign: "center" }}>
                                     <button
                                         data-testid="cart-item-amount-increase"
                                         className="cart-overlay-qty-btn"
                                         onClick={() => increment(item.product, item.options)}
-                                    >
-                                        +
-                                    </button>
-                                    <span
-                                        data-testid="cart-item-amount"
-                                        style={{ fontWeight: 600, fontSize: 15 }}
-                                    >
-                    {item.quantity}
-                  </span>
+                                    >+</button>
+                                    <div data-testid="cart-item-amount">{item.quantity}</div>
                                     <button
                                         data-testid="cart-item-amount-decrease"
                                         className="cart-overlay-qty-btn"
                                         onClick={() => decrement(item.product, item.options)}
-                                    >
-                                        –
-                                    </button>
+                                    >–</button>
                                 </div>
                             </div>
                         ))
                     )}
                 </div>
 
+                {/* footer */}
                 <div className="cart-overlay-footer">
-                    <span style={{ fontWeight: 600, fontSize: 16 }}>Total:</span>
-                    <span
-                        data-testid="cart-total"
-                        style={{ fontWeight: 700, fontSize: 18, marginLeft: 10 }}
-                    >
+                    <strong>Total:</strong>
+                    <span data-testid="cart-total" style={{ marginLeft: 8 }}>
             ${total.toFixed(2)}
           </span>
                 </div>
 
+                {/* order button */}
                 <button
                     className="cart-overlay-order-btn"
                     onClick={() => {
@@ -167,10 +145,6 @@ export default function CartOverlay() {
                         alert("Order placed!");
                     }}
                     disabled={cartItems.length === 0}
-                    style={{
-                        opacity: cartItems.length === 0 ? 0.5 : 1,
-                        cursor: cartItems.length === 0 ? "not-allowed" : "pointer",
-                    }}
                 >
                     Place Order
                 </button>
