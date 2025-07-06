@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
     ApolloClient,
     InMemoryCache,
@@ -8,10 +8,11 @@ import {
     BrowserRouter as Router,
     Routes,
     Route,
-    Navigate
+    Navigate,
+    useLocation
 } from "react-router-dom";
 
-import { CartProvider } from "./context/CartContext";
+import { CartProvider, useCart } from "./context/CartContext";
 import Header from "./components/Header";
 import CartOverlay from "./components/CartOverlay";
 import ProductList from "./pages/ProductList";
@@ -23,11 +24,22 @@ const client = new ApolloClient({
     cache: new InMemoryCache(),
 });
 
+// Closes the cart overlay on every route change
+function RouteWatcher() {
+    const { closeCart } = useCart();
+    const { pathname } = useLocation();
+    useEffect(() => {
+        closeCart();
+    }, [pathname, closeCart]);
+    return null;
+}
+
 export default function App() {
     return (
         <ApolloProvider client={client}>
             <CartProvider>
                 <Router>
+                    <RouteWatcher />
                     <Header />
                     <CartOverlay />
                     <main>
