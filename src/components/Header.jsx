@@ -22,7 +22,7 @@ export default function Header() {
         <header
             style={{
                 position: "relative",
-                zIndex: 1000,
+                zIndex: 10000,   // ensure header sits above the cart overlay
             }}
         >
             <nav>
@@ -48,11 +48,13 @@ export default function Header() {
             <button
                 className="cart-btn"
                 data-testid="cart-btn"
-                onClick={() => openCart()}
+                onClick={openCart}
                 aria-label="Open cart"
             >
                 🛒
-                {totalItems > 0 && <span className="cart-bubble">{totalItems}</span>}
+                {totalItems > 0 && (
+                    <span className="cart-bubble">{totalItems}</span>
+                )}
             </button>
         </header>
     );

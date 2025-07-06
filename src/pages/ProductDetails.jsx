@@ -1,6 +1,6 @@
 // src/pages/ProductDetails.jsx
 import { useParams } from "react-router-dom";
-import { useState } from "react";             
+import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_PRODUCT } from "../graphql/queries";
 import { useCart } from "../context/CartContext";
