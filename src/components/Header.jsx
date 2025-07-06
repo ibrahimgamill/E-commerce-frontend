@@ -22,7 +22,7 @@ export default function Header() {
         <header
             style={{
                 position: "relative",
-                zIndex: 1000, // make sure header sits above the overlay backdrop
+                zIndex: 9999,
             }}
         >
             <nav>
