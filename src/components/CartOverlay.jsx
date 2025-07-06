@@ -13,14 +13,14 @@ export default function CartOverlay() {
         closeCart,
     } = useCart();
 
+    if (!isCartOpen) return null; // truly gone when closed
+
     const total = cartItems.reduce(
-        (sum, item) => sum + (item.product.prices?.[0]?.amount || 0) * item.quantity,
+        (sum, item) =>
+            sum + (item.product.prices?.[0]?.amount || 0) * item.quantity,
         0
     );
-    const itemCountText =
-        cartItems.length === 1 ? "1 Item" : `${cartItems.length} Items`;
-
-    if (!isCartOpen) return null;
+    const itemCountText = cartItems.length === 1 ? "1 Item" : `${cartItems.length} Items`;
 
     return (
         <>
@@ -28,8 +28,7 @@ export default function CartOverlay() {
             <aside
                 data-testid="cart-overlay"
                 className="cart-overlay"
-                style={{ transform: "translateX(0)", pointerEvents: "auto" }}
-                aria-hidden={false}
+                aria-hidden="false"
             >
                 <div className="cart-overlay-header">
                     <span style={{ fontWeight: 700, fontSize: 20 }}>My Cart</span>
@@ -49,10 +48,11 @@ export default function CartOverlay() {
                     ) : (
                         cartItems.map((item, idx) => (
                             <div
-                                key={`${item.product.id}-${idx}`}
+                                key={item.product.id + "-" + idx}
                                 className="cart-overlay-item"
-                                data-testid={`cart-item-attribute-${(item.product
-                                    .attributes?.[0]?.name || "none")
+                                data-testid={`cart-item-attribute-${(
+                                    item.product.attributes?.[0]?.name || "none"
+                                )
                                     .replace(/\s+/g, "-")
                                     .toLowerCase()}-selected`}
                             >
@@ -68,9 +68,9 @@ export default function CartOverlay() {
                                     <div style={{ color: "#888", fontSize: 13, margin: "1px 0 6px 0" }}>
                                         {item.product.brand}
                                     </div>
-                                    {item.product.attributes && item.product.attributes.length > 0 && (
+                                    {item.product.attributes?.length > 0 && (
                                         <div style={{ margin: "2px 0" }}>
-                                            {item.product.attributes.map(attr => (
+                                            {item.product.attributes.map((attr) => (
                                                 <div key={attr.name} style={{ marginBottom: 2 }}>
                           <span style={{ fontWeight: 600, fontSize: 13 }}>
                             {attr.name}:
@@ -104,7 +104,6 @@ export default function CartOverlay() {
                                     </div>
                                 </div>
 
-                                {/* quantity controls */}
                                 <div
                                     style={{
                                         display: "flex",
@@ -158,10 +157,6 @@ export default function CartOverlay() {
                         alert("Order placed!");
                     }}
                     disabled={cartItems.length === 0}
-                    style={{
-                        opacity: cartItems.length === 0 ? 0.5 : 1,
-                        cursor: cartItems.length === 0 ? "not-allowed" : "pointer",
-                    }}
                 >
                     Place Order
                 </button>

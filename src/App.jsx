@@ -1,17 +1,15 @@
-import React from "react";
-import {
-    ApolloClient,
-    InMemoryCache,
-    ApolloProvider
-} from "@apollo/client";
+// src/App.jsx
+import React, { useEffect, useRef } from "react";
 import {
     BrowserRouter as Router,
     Routes,
     Route,
-    Navigate
+    Navigate,
+    useLocation,
 } from "react-router-dom";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
-import { CartProvider } from "./context/CartContext";
+import { CartProvider, useCart } from "./context/CartContext";
 import Header from "./components/Header";
 import CartOverlay from "./components/CartOverlay";
 import ProductList from "./pages/ProductList";
@@ -23,11 +21,28 @@ const client = new ApolloClient({
     cache: new InMemoryCache(),
 });
 
+// only close on *real* navigation
+function RouteWatcher() {
+    const { closeCart } = useCart();
+    const { pathname } = useLocation();
+    const prev = useRef(pathname);
+
+    useEffect(() => {
+        if (pathname !== prev.current) {
+            closeCart();
+        }
+        prev.current = pathname;
+    }, [pathname, closeCart]);
+
+    return null;
+}
+
 export default function App() {
     return (
         <ApolloProvider client={client}>
             <CartProvider>
                 <Router>
+                    <RouteWatcher />
                     <Header />
                     <CartOverlay />
                     <main>

@@ -1,3 +1,4 @@
+// src/components/Header.jsx
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useQuery } from "@apollo/client";
@@ -15,31 +16,28 @@ export default function Header() {
     const fetched = data && Array.isArray(data.categories) ? data.categories : [];
     const categories = [{ name: "all" }, ...fetched];
 
-    const { cartItems = [], openCart } = useCart();
+    const { cartItems, openCart } = useCart();
     const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
     return (
         <header
             style={{
                 position: "relative",
-                zIndex: 1000,  // above cart overlay
-                background: "#fff",
+                zIndex: 2000, // MUST be above 1001
             }}
         >
             <nav>
                 {loading && <span>Loading…</span>}
                 {!loading &&
                     !error &&
-                    categories.map(cat => {
+                    categories.map((cat) => {
                         const isActive = cat.name === activeCategory;
                         return (
                             <Link
                                 key={cat.name}
                                 to={cat.name === "all" ? "/all" : `/${cat.name}`}
                                 className={`nav-link${isActive ? " active" : ""}`}
-                                data-testid={
-                                    isActive ? "active-category-link" : "category-link"
-                                }
+                                data-testid={isActive ? "active-category-link" : "category-link"}
                             >
                                 {cat.name.charAt(0).toUpperCase() + cat.name.slice(1)}
                             </Link>
@@ -49,8 +47,8 @@ export default function Header() {
             <button
                 className="cart-btn"
                 data-testid="cart-btn"
-                onClick={openCart}
                 aria-label="Open cart"
+                onClick={openCart}
             >
                 🛒
                 {totalItems > 0 && (
