@@ -1,4 +1,3 @@
-// src/App.jsx
 import React, { useEffect, useRef } from "react";
 import {
     BrowserRouter as Router,

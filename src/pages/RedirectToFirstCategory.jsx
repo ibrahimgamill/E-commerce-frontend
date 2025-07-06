@@ -1,4 +1,3 @@
-// src/pages/RedirectToFirstCategory.jsx
 import { useQuery } from "@apollo/client";
 import { GET_CATEGORIES } from "../graphql/queries";
 import { useNavigate } from "react-router-dom";
