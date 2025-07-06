@@ -41,14 +41,14 @@ export default function ProductDetails() {
     const [selected, setSelected] = useState({});
     useEffect(() => {
         // only run after attrs array is ready
-        if (attrs.length) {
+        if (attrs.length && Object.keys(selected).length === 0) {
             const initial = {};
             attrs.forEach(attr => {
                 initial[attr.name] = attr.items[0].value;
             });
             setSelected(initial);
         }
-    }, [attrs]);
+    }, [attrs, selected]);
 
     if (loading) return <div className="loading">Loading...</div>;
     if (error || !data?.product) return <div className="error">Product not found.</div>;
