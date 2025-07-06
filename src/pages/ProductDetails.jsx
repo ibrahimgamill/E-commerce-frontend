@@ -46,7 +46,7 @@ export default function ProductDetails() {
     const isSelectable = attrs.length > 0;
     const allSelected  = attrs.every(attr => Boolean(selected[attr.name]));
 
-    // renderDescription unchanged…
+
     function renderDescription(html) {
         return (
             <div data-testid="product-description" style={{ marginTop: 16 }}>
@@ -59,12 +59,12 @@ export default function ProductDetails() {
     }
 
     return (
-        <div style={{ display: "flex", gap: 36, padding: "42px 56px" }}>
-            <div data-testid="product-gallery">
+        <div className="product-details">
+            <div data-testid="product-gallery" className="product-gallery">
                 <ProductGallery images={product.gallery} />
             </div>
 
-            <div style={{ maxWidth: 480 }}>
+            <div className="product-info" style={{ maxWidth: 480 }}>
                 <h1
                     data-testid={`product-${kebabCase(product.name)}`}
                     style={{ fontWeight: 800, fontSize: 26, margin: "0 0 7px" }}
