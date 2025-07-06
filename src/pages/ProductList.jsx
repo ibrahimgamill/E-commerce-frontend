@@ -24,12 +24,29 @@ export default function ProductList() {
         addToCart(product, defaultOptions);
     };
 
-    if (loading) return <div style={{ margin: 32 }}>Loading...</div>;
-    if (error) return <div style={{ color: "red", margin: 32 }}>Error loading products.</div>;
+    if (loading) {
+        return (
+            <div style={{ margin: 32 }}>
+                Loading…
+            </div>
+        );
+    }
+    if (error) {
+        return (
+            <div style={{ color: "red", margin: 32 }}>
+                Error loading products.
+            </div>
+        );
+    }
 
     return (
         <div>
-            <h2 style={{ margin: "32px 0 16px 0", fontSize: "2rem" }}>
+            <h2
+                style={{
+                    margin: "32px 0 16px 0",
+                    fontSize: "2rem"
+                }}
+            >
                 {categoryId[0].toUpperCase() + categoryId.slice(1)} Products
             </h2>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
