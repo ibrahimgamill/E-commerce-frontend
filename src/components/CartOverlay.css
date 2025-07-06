@@ -101,14 +101,4 @@
 .cart-overlay-order-btn:active {
     background: #219150;
 }
-/* hide the backdrop when closed */
-.cart-overlay-bg[aria-hidden="true"] {
-    display: none !important;
-    pointer-events: none !important;
-}
 
-/* hide the sidebar when closed */
-.cart-overlay[aria-hidden="true"] {
-    display: none !important;
-    pointer-events: none !important;
-}
