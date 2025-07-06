@@ -1,12 +1,19 @@
-/* src/components/Header.css */
+/* make the header itself flex */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;      /* tweak as you like */
+    position: relative;   /* you already have this for z-index */
+    z-index: 2000;
+}
 
-/* Base nav styling */
+/* your existing nav/hamburger rules */
 header nav {
     display: flex;
     gap: 24px;
 }
 
-/* Hide the hamburger by default */
 .hamburger-btn {
     display: none;
     background: none;
@@ -15,14 +22,10 @@ header nav {
     cursor: pointer;
 }
 
-/* MOBILE: under 600px */
 @media (max-width: 600px) {
-    /* Show hamburger */
     .hamburger-btn {
         display: block;
     }
-
-    /* Hide nav by default */
     header nav {
         display: none;
         flex-direction: column;
@@ -33,11 +36,18 @@ header nav {
         top: 100%;
         left: 0;
         right: 0;
-        z-index: 2000; /* above header */
+        z-index: 2000;
     }
-
-    /* When .menu-open is on <header>, show nav */
     header.menu-open nav {
         display: flex;
     }
+}
+
+/* new: style the cart button */
+.cart-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    /* margin-left:auto; not needed if you use justify-content:space-between */
 }
