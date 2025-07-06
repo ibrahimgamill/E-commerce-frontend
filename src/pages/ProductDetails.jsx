@@ -1,6 +1,6 @@
 // src/pages/ProductDetails.jsx
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";            // ← add useEffect
+import { useState } from "react";             
 import { useQuery } from "@apollo/client";
 import { GET_PRODUCT } from "../graphql/queries";
 import { useCart } from "../context/CartContext";
@@ -13,13 +13,19 @@ export default function ProductDetails() {
         variables: { id: productId },
     });
     const { addToCart } = useCart();
+    const [selected, setSelected] = useState({}); // starts empty!
 
-    // 1) Build & inject fallbacks into attrs
-    const attrs = Array.isArray(data?.product?.attributes)
-        ? [...data.product.attributes]
+    if (loading) return <div className="loading">Loading...</div>;
+    if (error || !data?.product) return <div className="error">Product not found.</div>;
+
+    const product = data.product;
+
+    // 1) Build attrs array + inject fallbacks
+    const attrs = Array.isArray(product.attributes)
+        ? [...product.attributes]
         : [];
 
-    if (data?.product && !attrs.some(a => kebabCase(a.name) === "color")) {
+    if (!attrs.some(a => kebabCase(a.name) === "color")) {
         attrs.unshift({
             id: "fallback-color",
             name: "Color",
@@ -28,7 +34,7 @@ export default function ProductDetails() {
         });
     }
 
-    if (data?.product && !attrs.some(a => kebabCase(a.name) === "capacity")) {
+    if (!attrs.some(a => kebabCase(a.name) === "capacity")) {
         attrs.push({
             id: "fallback-capacity",
             name: "Capacity",
@@ -37,27 +43,11 @@ export default function ProductDetails() {
         });
     }
 
-    // 2) selected state + initialize defaults
-    const [selected, setSelected] = useState({});
-    useEffect(() => {
-        // only run after attrs array is ready
-        if (attrs.length && Object.keys(selected).length === 0) {
-            const initial = {};
-            attrs.forEach(attr => {
-                initial[attr.name] = attr.items[0].value;
-            });
-            setSelected(initial);
-        }
-    }, [attrs, selected]);
-
-    if (loading) return <div className="loading">Loading...</div>;
-    if (error || !data?.product) return <div className="error">Product not found.</div>;
-
-    const product = data.product;
-    const priceObj = product.prices?.[0];
+    const priceObj    = product.prices?.[0];
     const isSelectable = attrs.length > 0;
-    const allSelected = attrs.every(attr => Boolean(selected[attr.name]));
+    const allSelected  = attrs.every(attr => Boolean(selected[attr.name]));
 
+    // renderDescription unchanged…
     function renderDescription(html) {
         return (
             <div data-testid="product-description" style={{ marginTop: 16 }}>
@@ -86,7 +76,6 @@ export default function ProductDetails() {
                     {product.brand}
                 </div>
 
-                {/* Attributes */}
                 {isSelectable &&
                     attrs.map(attr => {
                         const attrKebab = kebabCase(attr.name);
@@ -108,8 +97,7 @@ export default function ProductDetails() {
                                                 setSelected(sel => ({ ...sel, [attr.name]: item.value }))
                                             }
                                             style={{
-                                                minWidth: 38,
-                                                minHeight: 38,
+                                                minWidth: 38, minHeight: 38,
                                                 background:
                                                     attr.type === "swatch"
                                                         ? item.value
@@ -155,7 +143,6 @@ export default function ProductDetails() {
                         );
                     })}
 
-                {/* Price */}
                 <div style={{ margin: "25px 0 7px 0", fontWeight: 700, fontSize: 17 }}>
                     Price:
                 </div>
@@ -164,8 +151,10 @@ export default function ProductDetails() {
                     {(priceObj?.amount ?? 0).toFixed(2)}
                 </div>
 
-                {/* Add to Cart */}
                 <button
+                    data-testid="add-to-cart"
+                    disabled={isSelectable && !allSelected}
+                    onClick={() => addToCart(product, selected)}
                     style={{
                         margin: "18px 0 0 0",
                         background: "#27ae60",
@@ -177,14 +166,8 @@ export default function ProductDetails() {
                         fontWeight: 700,
                         width: "100%",
                         boxShadow: "0 2px 12px #27ae6036",
-                        cursor: allSelected || !isSelectable ? "pointer" : "not-allowed",
-                        opacity: allSelected || !isSelectable ? 1 : 0.58,
-                        transition: "opacity .18s",
-                    }}
-                    data-testid="add-to-cart"
-                    disabled={isSelectable && !allSelected}
-                    onClick={() => {
-                        addToCart(product, selected);
+                        cursor: allSelected ? "pointer" : "not-allowed",
+                        opacity: allSelected ? 1 : 0.58,
                     }}
                 >
                     Add to Cart
