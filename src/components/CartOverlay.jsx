@@ -1,5 +1,5 @@
-// src/components/CartOverlay.jsx
-import React from "react";
+import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import "./CartOverlay.css";
 import { useCart } from "../context/CartContext";
 
@@ -12,6 +12,14 @@ export default function CartOverlay() {
         isCartOpen,
         closeCart,
     } = useCart();
+    // 1) whenever the route changes, auto-close the overlay
+    const { pathname } = useLocation();
+    useEffect(() => {
+        if (isCartOpen) closeCart();
+    }, [pathname, isCartOpen, closeCart]);
+
+    // 2) if it’s closed, render nothing
+    if (!isCartOpen) return null;
 
     const total = cartItems.reduce(
         (sum, item) => sum + (item.product.prices?.[0]?.amount || 0) * item.quantity,
@@ -20,16 +28,15 @@ export default function CartOverlay() {
     const itemCountText =
         cartItems.length === 1 ? "1 Item" : `${cartItems.length} Items`;
 
-    if (!isCartOpen) return null;
-
     return (
         <>
             <div className="cart-overlay-bg" onClick={closeCart} />
+
             <aside
                 data-testid="cart-overlay"
                 className="cart-overlay"
-                style={{ transform: "translateX(0)", pointerEvents: "auto" }}
                 aria-hidden={false}
+                style={{ transform: "translateX(0)", pointerEvents: "auto" }}
             >
                 <div className="cart-overlay-header">
                     <span style={{ fontWeight: 700, fontSize: 20 }}>My Cart</span>
@@ -51,8 +58,9 @@ export default function CartOverlay() {
                             <div
                                 key={`${item.product.id}-${idx}`}
                                 className="cart-overlay-item"
-                                data-testid={`cart-item-attribute-${(item.product
-                                    .attributes?.[0]?.name || "none")
+                                data-testid={`cart-item-attribute-${(
+                                    item.product.attributes?.[0]?.name || "none"
+                                )
                                     .replace(/\s+/g, "-")
                                     .toLowerCase()}-selected`}
                             >
@@ -65,10 +73,12 @@ export default function CartOverlay() {
                                     <div style={{ fontWeight: 700, fontSize: 16 }}>
                                         {item.product.name}
                                     </div>
-                                    <div style={{ color: "#888", fontSize: 13, margin: "1px 0 6px 0" }}>
+                                    <div
+                                        style={{ color: "#888", fontSize: 13, margin: "1px 0 6px 0" }}
+                                    >
                                         {item.product.brand}
                                     </div>
-                                    {item.product.attributes && item.product.attributes.length > 0 && (
+                                    {item.product.attributes?.length > 0 && (
                                         <div style={{ margin: "2px 0" }}>
                                             {item.product.attributes.map(attr => (
                                                 <div key={attr.name} style={{ marginBottom: 2 }}>
@@ -104,7 +114,6 @@ export default function CartOverlay() {
                                     </div>
                                 </div>
 
-                                {/* quantity controls */}
                                 <div
                                     style={{
                                         display: "flex",
