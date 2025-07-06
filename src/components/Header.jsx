@@ -16,7 +16,7 @@ export default function Header() {
     const fetched = data && Array.isArray(data.categories) ? data.categories : [];
     const categories = [{ name: "all" }, ...fetched];
 
-    const { cartItems, openCart } = useCart();
+    const { cartItems = [], isCartOpen, openCart, closeCart } = useCart();
     const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
     return (
@@ -48,7 +48,7 @@ export default function Header() {
                 className="cart-btn"
                 data-testid="cart-btn"
                 aria-label="Open cart"
-                onClick={openCart}
+                onClick={() => { isCartOpen ? closeCart() : openCart(); } }
             >
                 🛒
                 {totalItems > 0 && (
