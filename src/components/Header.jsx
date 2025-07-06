@@ -11,32 +11,34 @@ export default function Header() {
         ? path
         : "all";
 
-    const {loading, error, data} = useQuery(GET_CATEGORIES);
+    const { loading, error, data } = useQuery(GET_CATEGORIES);
     const fetched = data && Array.isArray(data.categories) ? data.categories : [];
-    const categories = [{name: "all"}, ...fetched];
+    const categories = [{ name: "all" }, ...fetched];
 
-    const {cartItems = [], openCart} = useCart();
+    const { cartItems = [], openCart } = useCart();
     const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
     return (
         <header
             style={{
                 position: "relative",
-                zIndex: 1000,   // ensure header sits above the overlay backdrop
+                zIndex: 1000, // make sure header sits above the overlay backdrop
             }}
         >
             <nav>
                 {loading && <span>Loading…</span>}
                 {!loading &&
                     !error &&
-                    categories.map((cat) => {
+                    categories.map(cat => {
                         const isActive = cat.name === activeCategory;
                         return (
                             <Link
                                 key={cat.name}
                                 to={cat.name === "all" ? "/all" : `/${cat.name}`}
                                 className={`nav-link${isActive ? " active" : ""}`}
-                                data-testid={isActive ? "active-category-link" : "category-link"}
+                                data-testid={
+                                    isActive ? "active-category-link" : "category-link"
+                                }
                             >
                                 {cat.name.charAt(0).toUpperCase() + cat.name.slice(1)}
                             </Link>
@@ -50,9 +52,7 @@ export default function Header() {
                 aria-label="Open cart"
             >
                 🛒
-                {totalItems > 0 && (
-                    <span className="cart-bubble">{totalItems}</span>
-                )}
+                {totalItems > 0 && <span className="cart-bubble">{totalItems}</span>}
             </button>
         </header>
     );
