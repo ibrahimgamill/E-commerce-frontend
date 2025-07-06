@@ -1,0 +1,43 @@
+/* src/components/Header.css */
+
+/* Base nav styling */
+header nav {
+    display: flex;
+    gap: 24px;
+}
+
+/* Hide the hamburger by default */
+.hamburger-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* MOBILE: under 600px */
+@media (max-width: 600px) {
+    /* Show hamburger */
+    .hamburger-btn {
+        display: block;
+    }
+
+    /* Hide nav by default */
+    header nav {
+        display: none;
+        flex-direction: column;
+        gap: 12px;
+        padding: 8px 16px;
+        background: #fff;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 2000; /* above header */
+    }
+
+    /* When .menu-open is on <header>, show nav */
+    header.menu-open nav {
+        display: flex;
+    }
+}

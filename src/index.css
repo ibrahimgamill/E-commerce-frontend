@@ -122,6 +122,12 @@ nav {
     margin-bottom: 14px;
 }
 
+.product-gallery img,
+.cart-overlay-img {
+    max-width: 100%;
+    height: auto;
+}
+
 .product-card .quick-shop-btn {
     position: absolute;
     right: 14px;
